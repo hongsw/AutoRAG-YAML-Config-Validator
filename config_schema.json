@@ -1,0 +1,144 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "required": ["node_lines"],
+    "properties": {
+      "node_lines": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["node_line_name", "nodes"],
+          "properties": {
+            "node_line_name": {
+              "type": "string"
+            },
+            "nodes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["node_type"],
+                "properties": {
+                  "node_type": {
+                    "type": "string"
+                  },
+                  "strategy": {
+                    "type": "object",
+                    "properties": {
+                      "metrics": {
+                        "oneOf": [
+                          {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "metric_name": { "type": "string" },
+                                "embedding_model": { "type": "string" }
+                              },
+                              "required": ["metric_name"]
+                            }
+                          }
+                        ]
+                      },
+                      "speed_threshold": { "type": "number" },
+                      "top_k": { "type": "number" },
+                      "retrieval_modules": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "module_type": { "type": "string" },
+                            "bm25_tokenizer": {
+                              "type": "array",
+                              "items": { "type": "string" }
+                            },
+                            "embedding_model": { "type": "string" }
+                          },
+                          "required": ["module_type"]
+                        }
+                      },
+                      "generator_modules": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "module_type": { "type": "string" },
+                            "llm": { "type": "string" },
+                            "model": {
+                              "type": "array",
+                              "items": { "type": "string" }
+                            }
+                          },
+                          "required": ["module_type"]
+                        }
+                      }
+                    }
+                  },
+                  "modules": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "module_type": { "type": "string" },
+                        "generator_module_type": { "type": "string" },
+                        "llm": {
+                          "oneOf": [
+                            { "type": "string" },
+                            { "type": "array", "items": { "type": "string" } }
+                          ]
+                        },
+                        "model": {
+                          "oneOf": [
+                            { "type": "string" },
+                            { "type": "array", "items": { "type": "string" } }
+                          ]
+                        },
+                        "max_token": { "type": "number" },
+                        "temperature": {
+                          "oneOf": [
+                            { "type": "number" },
+                            { "type": "array", "items": { "type": "number" } }
+                          ]
+                        },
+                        "embedding_model": { "type": "string" },
+                        "embedding_batch": { "type": "number" },
+                        "weight_range": {
+                          "oneOf": [
+                            { "type": "string" },
+                            {
+                              "type": "array",
+                              "items": { "type": "number" },
+                              "minItems": 2,
+                              "maxItems": 2
+                            }
+                          ]
+                        },
+                        "normalize_method": {
+                          "type": "array",
+                          "items": { "type": "string" }
+                        },
+                        "test_weight_size": { "type": "number" },
+                        "mode": { "type": "string" },
+                        "threshold": { "type": "number" },
+                        "percentile": { "type": "number" },
+                        "prompt": {
+                          "type": "array",
+                          "items": { "type": "string" }
+                        }
+                      },
+                      "required": ["module_type"]
+                    }
+                  },
+                  "top_k": { "type": "number" },
+                  "embedding_model": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
