@@ -36,16 +36,6 @@ TYPE must be number
   220 |             {
   221 |               "module_type": "threshold_cutoff",
 
-REQUIRED must have required property 'module_type'
-
-  358 |               ]
-  359 |             },
-> 360 |             {
-      |             ^ ☹️  module_type is missing here!
-  361 |               "module_type1": "openai_llm",
-  362 |               "llm": "gpt-3.5-turbo",
-  363 |               "temperature": 0.8
-
 Error 1:
 Path: /node_lines/1/nodes/3/modules/3/threshold
 Message: must be number
@@ -118,3 +108,44 @@ The main objectives of this validator are:
 ## Contributing
 
 Contributions to improve the validator are welcome. Please submit pull requests or open issues to discuss potential improvements or report bugs.
+
+
+## Python validate output sample
+```sh
+✗ python validate.py
+Validating configuration...
+Validation errors:
+Path: node_lines -> 1 -> nodes -> 3 -> modules -> 3 -> threshold
+Message: datetime.date(2015, 1, 1) is not of type 'number'
+
+Problematic config part:
+Traceback (most recent call last):
+  File "/Users/martin/Development/autorag-saas/yaml-schema/validate.py", line 24, in validate_config
+    validate(instance=config, schema=schema)
+  File "/Users/martin/.pyenv/versions/3.10.13/lib/python3.10/site-packages/jsonschema/validators.py", line 1307, in validate
+    raise error
+jsonschema.exceptions.ValidationError: datetime.date(2015, 1, 1) is not of type 'number'
+
+Failed validating 'type' in schema['properties']['node_lines']['items']['properties']['nodes']['items']['properties']['modules']['items']['properties']['threshold']:
+    {'type': 'number'}
+
+On instance['node_lines'][1]['nodes'][3]['modules'][3]['threshold']:
+    datetime.date(2015, 1, 1)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/martin/Development/autorag-saas/yaml-schema/validate.py", line 51, in <module>
+    is_valid = validate_config(config, schema)
+  File "/Users/martin/Development/autorag-saas/yaml-schema/validate.py", line 41, in validate_config
+    print(json.dumps(current_obj, indent=2))
+  File "/Users/martin/.pyenv/versions/3.10.13/lib/python3.10/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+  File "/Users/martin/.pyenv/versions/3.10.13/lib/python3.10/json/encoder.py", line 201, in encode
+    chunks = list(chunks)
+  File "/Users/martin/.pyenv/versions/3.10.13/lib/python3.10/json/encoder.py", line 438, in _iterencode
+    o = _default(o)
+  File "/Users/martin/.pyenv/versions/3.10.13/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type date is not JSON serializable
+```
