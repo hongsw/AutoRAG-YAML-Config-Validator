@@ -1,7 +1,7 @@
+import glob
 import json
 import yaml
 from jsonschema import validate, ValidationError
-from jsonschema.exceptions import best_match
 
 def load_yaml(file_path):
     try:
@@ -28,32 +28,47 @@ def validate_config(config, schema):
         print('Validation errors:')
         print(f"Path: {' -> '.join(str(path) for path in error.absolute_path)}")
         print(f"Message: {error.message}")
-        
+
         if error.context:
             print("Additional errors:")
             for err in error.context:
                 print(f"  - {err.message}")
-        
+
         print("\nProblematic config part:")
         current_obj = config
         for path in error.absolute_path:
             current_obj = current_obj[path]
         print(json.dumps(current_obj, indent=2))
-        
+
         return False
 
 # Main execution
 schema = load_json_schema('config_schema.json')
-config = load_yaml('config/config.yaml')
+yaml_files = glob.glob("./config/**/*.yaml", recursive=True) + \
+             glob.glob("./config/**/*.yml", recursive=True)
+configs = list(map(load_yaml, yaml_files))
+print(configs)
 
-if schema and config:
-    print('Validating configuration...')
-    is_valid = validate_config(config, schema)
-    
-    if is_valid:
-        print('Config is valid. Proceeding with further processing...')
-        # Here you can add any additional processing of the valid config
-    else:
-        print('Config is invalid. Please correct the errors and try again.')
+total_length = len(configs)
+success_length = 0
+failure_length = 0
+
+if schema and configs:
+    for config in configs:
+        print('Validating configuration...')
+        is_valid = validate_config(config, schema)
+
+        if is_valid:
+            print('Config is valid. Proceeding with further processing...')
+            success_length += 1
+            # Here you can add any additional processing of the valid config
+        else:
+            print('Config is invalid. Please correct the errors and try again.')
+            failure_length += 1
 else:
     print('Failed to load schema or config. Please check the files and try again.')
+
+print("=========================================")
+print(f"Total configs: {total_length}")
+print(f"Successful validations: {success_length}")
+print(f"Failed validations: {failure_length}")
