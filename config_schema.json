@@ -3,6 +3,24 @@
     "type": "object",
     "required": ["node_lines"],
     "properties": {
+      "vectordb": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["name", "db_type", "embedding_model"],
+          "properties": {
+            "name": { "type": "string" },
+            "db_type": { "type": "string" },
+            "similarity_metric": {
+              "type": "string",
+              "enum": ["cosine", "l2", "ip"]
+            },
+            "embedding_model": { "type": "string" },
+            "embedding_batch": { "type": "number" },
+            "collection_name": { "type": "string" }
+          }
+        }
+      },
       "node_lines": {
         "type": "array",
         "items": {
@@ -19,10 +37,13 @@
                 "required": ["node_type"],
                 "properties": {
                   "node_type": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": ["query_expansion", "retrieval", "generator", "prompt_maker", "passage_filter", "passage_compressor", "passage_reranker", "passage_augmenter" ]
                   },
                   "strategy": {
                     "type": "object",
+                    "additionalProperties": true,
+                    "required": ["metrics"],
                     "properties": {
                       "metrics": {
                         "oneOf": [
@@ -44,6 +65,7 @@
                         ]
                       },
                       "speed_threshold": { "type": "number" },
+                      "token_threshold": {"type": "number"},
                       "top_k": { "type": "number" },
                       "retrieval_modules": {
                         "type": "array",
@@ -81,6 +103,7 @@
                     "type": "array",
                     "items": {
                       "type": "object",
+                      "additionalProperties": true,
                       "properties": {
                         "module_type": { "type": "string" },
                         "generator_module_type": { "type": "string" },
@@ -96,7 +119,10 @@
                             { "type": "array", "items": { "type": "string" } }
                           ]
                         },
-                        "max_token": { "type": "number" },
+                        "max_token": {  "oneOf": [
+                            { "type": "integer" },
+                            { "type": "array", "items": { "type": "integer" } }
+                          ] },
                         "temperature": {
                           "oneOf": [
                             { "type": "number" },
@@ -104,7 +130,7 @@
                           ]
                         },
                         "embedding_model": { "type": "string" },
-                        "embedding_batch": { "type": "number" },
+                        "embedding_batch": { "type": "integer" },
                         "weight_range": {
                           "oneOf": [
                             { "type": "string" },
@@ -121,18 +147,26 @@
                           "items": { "type": "string" }
                         },
                         "test_weight_size": { "type": "number" },
-                        "mode": { "type": "string" },
-                        "threshold": { "type": "number" },
-                        "percentile": { "type": "number" },
+                        "mode": {  "oneOf": [
+                            { "type": "string" },
+                            { "type": "array", "items": { "type": "string" } }
+                          ]},
+                        "percentile": { "oneOf": [
+                            { "type": "number" },
+                            { "type": "array", "items": { "type": "number" } }
+                          ] },
                         "prompt": {
                           "type": "array",
-                          "items": { "type": "string" }
+                          "items": { "oneOf": [
+                            { "type": "string" },
+                            { "type": "array", "items": { "type": "string" } }
+                          ] }
                         }
                       },
                       "required": ["module_type"]
                     }
                   },
-                  "top_k": { "type": "number" },
+                  "top_k": { "type": "integer" },
                   "embedding_model": { "type": "string" }
                 }
               }
