@@ -155,13 +155,10 @@
                             { "type": "number" },
                             { "type": "array", "items": { "type": "number" } }
                           ] },
-                        "prompt": {
-                          "type": "array",
-                          "items": { "oneOf": [
+                        "prompt": { "oneOf": [
                             { "type": "string" },
                             { "type": "array", "items": { "type": "string" } }
                           ] }
-                        }
                       },
                       "required": ["module_type"]
                     }

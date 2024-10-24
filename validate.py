@@ -44,7 +44,7 @@ def validate_config(config, schema):
 
 # Main execution
 schema = load_json_schema('config_schema.json')
-config = load_yaml('config.yaml')
+config = load_yaml('config/config.yaml')
 
 if schema and config:
     print('Validating configuration...')

@@ -76,15 +76,15 @@ The main objectives of this validator are:
 1. Install required packages:
 
    ```sh
-   npm install js-yaml ajv better-ajv-errors
+   npm install js-yaml ajv better-ajv-errors glob
    ```
 
-2. Place the JSON schema file (`config_schema.json`) and YAML configuration file (`config.yaml`) in the project root.
+2. Place the JSON schema file (`config_schema.json`) and YAML configuration files in the `config` folder.
 
 3. Run the validation script:
 
    ```sh
-   node validate.js
+   node main.js
    ```
 
 4. The script will validate the configuration file and output the results:
